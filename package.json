@@ -1,0 +1,29 @@
+{
+  "name": "windows-file-clipboard",
+  "version": "0.1.0",
+  "description": "Get and put files in the native Windows clipboard in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter nyan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smiley32/windows-file-clipboard.git"
+  },
+  "keywords": [
+    "clipboard",
+    "windows",
+    "electron",
+    "file"
+  ],
+  "author": "Smiley32 <jeannin.emile@gmail.com> (https://github.com/Smiley32)",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/Smiley32/windows-file-clipboard/issues"
+  },
+  "homepage": "https://github.com/Smiley32/windows-file-clipboard#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
+  }
+}
