@@ -9,13 +9,9 @@ if (process.env.DEBUG) {
 }
 
 module.exports.writePaths = function (paths) {
-    // nativeClipboard.writeFiles(['Test1', 'Test2'])
     nativeClipboard.writeFiles(paths)
 }
 
 module.exports.readPaths = function () {
-    return [
-        'C:\\Test.txt',
-        'D:\\TestDir'
-    ]
+    return nativeClipboard.readFiles();
 }

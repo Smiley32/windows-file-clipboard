@@ -21,13 +21,11 @@ void writePathsInClipboard (char * sFiles, int nLen) {
 	char* sData = (char*)::GlobalLock(hGbl);
 	memcpy(sData, &dobj, 20);
 	char* sWStr = sData + 20;
-	for (int i = 0; i < nLen * 2; i += 2)
-	{
+	for (int i = 0; i < nLen * 2; i += 2) {
 		sWStr[i] = sFiles[i / 2];
 	}
 	::GlobalUnlock(hGbl);
-	if (OpenClipboard(0))
-	{
+	if (OpenClipboard(0)) {
 		EmptyClipboard();
 		SetClipboardData(CF_HDROP, hGbl);
 		CloseClipboard();
@@ -40,15 +38,15 @@ void writePathsInClipboard (char * sFiles, int nLen) {
  * An array of strings must be sent
  */
 NAN_METHOD(writeFiles) {
-    Isolate        *isolate     = info.GetIsolate();
-    Local<Context>  context     = isolate->GetCurrentContext();
+    Isolate * isolate = info.GetIsolate();
+    Local<Context> context = isolate->GetCurrentContext();
 
-    Local<Array> test = Local<Array>::Cast(info[0]);
+    Local<Array> array = Local<Array>::Cast(info[0]);
 
     char * sFiles = NULL;
     int totalSize = 0;
-    for (int i = 0; i < test->Length(); i++) {
-        MaybeLocal<Value> maybeIndex = test->Get(context, i);
+    for (size_t i = 0; i < array->Length(); i++) {
+        MaybeLocal<Value> maybeIndex = array->Get(context, i);
         Local<Value> index = maybeIndex.ToLocalChecked();
 
         String::Utf8Value path(isolate, index);
@@ -67,71 +65,57 @@ NAN_METHOD(writeFiles) {
     free(sFiles);
 }
 
+NAN_METHOD(readFiles) {
+    Isolate * isolate = info.GetIsolate();
+    Local<Context> context = isolate->GetCurrentContext();
+
+    Local<Array> response = Array::New(isolate, 0);
+
+    TCHAR lpszFileName[MAX_PATH];
+
+	OpenClipboard(0);
+	HANDLE handleData = GetClipboardData(CF_HDROP);
+
+	if (nullptr != handleData) {
+		HDROP hDrop = (HDROP)GlobalLock(handleData);
+		if (nullptr != hDrop) {
+			UINT fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, 0, 0);
+			UINT filenameLength;
+			for (UINT i = 0; i < fileCount; ++i) {
+				filenameLength = DragQueryFile(hDrop, i, 0, 0);
+				DragQueryFile(hDrop, i, lpszFileName, filenameLength + 1);
+				
+				// std::wstring test(lpszFileName);
+				// std::string txt(test.begin(), test.end());
+                std::string txt(lpszFileName);
+                // I have a warning here, but I dunno why
+                // https://v8docs.nodesource.com/node-13.2/d2/db3/classv8_1_1_string.html#aa752a2765da43127eba96192580671f3
+                // It's not written as deprecated though
+                MaybeLocal<String> maybeS = String::NewFromUtf8(isolate, txt.c_str());
+                Local<String> s = maybeS.FromMaybe(String::Empty(isolate));
+                response->Set(context, i, s);
+			}
+			GlobalUnlock(handleData);
+		}
+	}
+	else
+	{
+		std::cerr << "Error clipboard: " << GetLastError() << std::endl;
+	}
+	CloseClipboard();
+
+    info.GetReturnValue().Set(response);
+}
+
 NAN_MODULE_INIT(Init) {
     Nan::Set(target,
         Nan::New<String>("writeFiles").ToLocalChecked(),
         Nan::GetFunction(Nan::New<FunctionTemplate>(writeFiles)).ToLocalChecked()
     );
+    Nan::Set(target,
+        Nan::New<String>("readFiles").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<FunctionTemplate>(readFiles)).ToLocalChecked()
+    );
 }
 
 NODE_MODULE(clipboard, Init)
-
-
-/*
-int main()
-{
-	char sFiles[] = "D:\\Alita Battle Angel AC3 Dubbed 1080p\0";
-	//	"C:\\Users\\Smiley32\\Documents\\Godot\\2048\\2048.exe";
-	DROPFILES dobj = { 20, { 0, 0 }, 0, 1 };
-	int nLen = sizeof(sFiles);
-	int nGblLen = sizeof(dobj) + nLen * 2 + 5;//lots of nulls and multibyte_char
-	HGLOBAL hGbl = GlobalAlloc(GMEM_ZEROINIT | GMEM_MOVEABLE | GMEM_DDESHARE, nGblLen);
-	char* sData = (char*)::GlobalLock(hGbl);
-	memcpy(sData, &dobj, 20);
-	char* sWStr = sData + 20;
-	for (int i = 0; i < nLen * 2; i += 2)
-	{
-		sWStr[i] = sFiles[i / 2];
-	}
-	::GlobalUnlock(hGbl);
-	if (OpenClipboard(0))
-	{
-		EmptyClipboard();
-		SetClipboardData(CF_HDROP, hGbl);
-		CloseClipboard();
-	}
-
-	TCHAR lpszFileName[MAX_PATH];
-
-	OpenClipboard(0);
-	HANDLE handleData = GetClipboardData(CF_HDROP);
-
-	if (nullptr != handleData)
-	{
-		HDROP hDrop = (HDROP)GlobalLock(handleData);
-		if (nullptr != hDrop)
-		{
-			UINT fileCount = DragQueryFile(hDrop, 0xFFFFFFFF, 0, 0);
-			UINT filenameLength;
-			for (UINT i = 0; i < fileCount; ++i)
-			{
-				filenameLength = DragQueryFile(hDrop, i, 0, 0);
-				DragQueryFile(hDrop, i, lpszFileName, filenameLength + 1);
-				
-				std::wstring test(lpszFileName);
-				std::string txt(test.begin(), test.end());
-				std::cout << "Str " << txt << std::endl;
-			}
-
-			GlobalUnlock(handleData);
-		}
-		
-		
-	}
-	else
-	{
-		printf("Error:%d", GetLastError());
-	}
-	CloseClipboard();
-}
-*/
