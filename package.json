@@ -4,7 +4,9 @@
   "description": "Get and put files in the native Windows clipboard in javascript",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter nyan"
+    "build": "node-gyp build",
+    "install": "node-gyp rebuild",
+    "test": "mocha --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
   "homepage": "https://github.com/Smiley32/windows-file-clipboard#readme",
   "dependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.2",
+    "nan": "^2.14.0"
   }
 }
