@@ -15,3 +15,7 @@ module.exports.writePaths = function (paths) {
 module.exports.readPaths = function () {
     return nativeClipboard.readFiles();
 }
+
+module.exports.emptyPaths = function () {
+    nativeClipboard.writeFiles([])
+}

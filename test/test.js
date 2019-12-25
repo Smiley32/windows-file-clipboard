@@ -43,4 +43,16 @@ describe('#numFormatter', function() {
         expect(result[0]).to.equal(path1);
         expect(result[1]).to.equal(path2);
     });
+
+    it('Empty paths clipboard', function() {
+        var path1 = 'C:\\Test1\\complex file.tar.gz'
+        var path2 = 'C:\\Test2\\Just\\A\\Dir\\'
+        clipboard.writePaths([
+            path1,
+            path2
+        ]);
+        clipboard.emptyPaths();
+        var result = clipboard.readPaths();
+        expect(result.length).to.equal(0);
+    });
 });

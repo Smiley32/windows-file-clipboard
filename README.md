@@ -30,9 +30,12 @@ var paths = windowsClipboard.readPaths()
 
 // paths should contains ['The\\First\\Path', 'Path\\To\\a.file'],
 // or the names of the files copied from the explorer
+
+windowsClipboard.emptyPaths()
+// To remove all paths from the clipboard
 ```
 
 ## Contribute
 
-I'm not an expert in Windows, nor C++ nor NodeJS, so please feel free to add issues, to imrove this module.
+I'm not an expert in Windows, nor C++ nor NodeJS, so please feel free to add issues, to improve this module.
 
