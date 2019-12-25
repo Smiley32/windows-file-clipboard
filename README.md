@@ -7,12 +7,22 @@
 
 This module is for Windows only.
 
-## Getting Started
+## Installation
 
 Install it via npm:
 ```
 npm install windows-file-clipboard
 ```
+
+Then, make sure `electron-rebuild` is installed, and Microsoft Visual Studio (`windows-build-tools` should also work)
+
+You must run
+```
+.\node_modules\.bin\electron-rebuild.cmd
+```
+in order to compile my plugin on your machine.
+
+## Getting Started
 
 It may require windows build tools, or Microsoft Visual Studio to compile the native C++ code needed.
 
