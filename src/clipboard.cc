@@ -49,7 +49,7 @@ NAN_METHOD(writeFiles) {
         MaybeLocal<Value> maybeIndex = array->Get(context, i);
         Local<Value> index = maybeIndex.ToLocalChecked();
 
-        String::Utf8Value path(isolate, index);
+        String::Utf8Value path(index);
 
         int prevSize = totalSize;
         totalSize += path.length() + 1;
