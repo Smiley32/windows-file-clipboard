@@ -55,4 +55,14 @@ describe('#numFormatter', function() {
         var result = clipboard.readPaths();
         expect(result.length).to.equal(0);
     });
+
+    it('Encoding', function() {
+        var path1 = '無題.txt'
+        console.log(path1)
+        clipboard.writePaths([
+            path1
+        ])
+        var result = clipboard.readPaths();
+        expect(result[0]).to.equal(path1);
+    })
 });
