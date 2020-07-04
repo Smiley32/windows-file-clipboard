@@ -65,8 +65,6 @@ NAN_METHOD(writeFiles) {
 
         String::Utf8Value path(isolate, index);
 
-        // std::cout << path << std::endl;
-
         int prevSize = totalSize;
         totalSize += path.length() + 1;
         // path length + \0

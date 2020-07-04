@@ -14,7 +14,9 @@ Install it via npm:
 npm install windows-file-clipboard
 ```
 
-Then, make sure `electron-rebuild` is installed, and Microsoft Visual Studio (`windows-build-tools` should also work)
+In case the module wasn't build, you can build it like that (electron):
+
+Make sure `electron-rebuild` is installed, and Microsoft Visual Studio (`windows-build-tools` should also work)
 
 You must run
 ```
